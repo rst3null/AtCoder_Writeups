@@ -1,0 +1,14 @@
+code {
+    background-color: black;
+    width:fit-content;
+    white-space: pre;
+    display:block;
+}
+
+article {
+    margin-top:20px;
+    border: solid;
+    border-radius:20px;
+    border-color:black;
+    padding:20px;
+}

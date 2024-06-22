@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="../style.css"></style>
+    <title>AtCoder Beginner Contest 359 解説</title>
+</head>
+
+<body>
+    <h1>AtCoder Beginner Contest 359 解説</h1>
+    本稿では使用言語をRustとして解説します。
+    <article id="abc_359_a">
+        <h2>A問題</h2>
+        <p>入力されてくる文字列を1行づつ、"Takahashi"だった回数をカウントするだけの優しい問題です。</p>
+        <p>foldを使って入力された文字列をすべて走査し、一致したときだけ結果を+1します。</p>
+        <p>文字列の読み込み方法はproconioでStringの配列として読み込むと簡単です。</p>
+        <code>
+input! {
+    n:i32,
+    strings:[String;n],
+}
+        </code>
+        <p>そして、数え上げにはイテレーターのfold関数を使うと簡単に記述できます。</p>
+        <p>fold関数に渡したクロージャの引数sが"Takahashi"ならカウンタを+1して返すだけです。</p>
+        <p>fold関数は数え上げなどで使えるので覚えておきましょう</p>
+        <code>
+let result = strings.iter().fold(0,|num,s|{
+    if *s == String::from("Takahashi") {
+        return num + 1;
+    }
+    return num;
+}
+);
+println!("{}",result);
+        </code>
+        <p>そして、これをつなげると最終的に以下の提出コードになります。</p>
+        <code>
+use proconio::input;
+            
+fn main(){
+    input! {
+        n:i32,
+        strings:[String;n],
+    }
+    let result = strings.iter().fold(0,|num,s|{
+    if *s == String::from("Takahashi") {
+        return num + 1;
+    }
+    return num;
+    });
+    println!("{}",result);
+}
+        </code>
+    </article>
+    <article id="abc_359_b">
+        <h2>B問題</h2>
+        <p>1行目に色の種類の数と、2列目に並んでいる人の服の色がスペース区切りで格納されています。</p>
+        <p>入力処理はA問題のモノを流用しても大丈夫そうです。</p>
+        <p>問題文によると、2列目の中で同じ色に挟まれている合計人数を出力すればいいようです。</p>
+        <p>この問題ではA問題のようにfoldを使うことができませんのでforループを使って配列を走査します。</p>
+        <p>入力の配列をSとして、S[n]とS[n+2]が一致したときカウンタをインクリメントすればよいです。</p>
+        <p>ただし、配列の添え字を+2する部分があるため領域外アクセスによるpanicに注意が必要です。</p>
+        <p>以下答案です。</p>
+        <code>
+fn main() {
+    input! {
+    n:i32,
+    people:[i32;n*2],
+    }
+            
+    let mut count = 0;
+            
+    for position in 0..(people.len() - 2) {
+        if people[position] == people[position + 2] {
+            count = count + 1;
+        }
+    }
+    println!("{}", count);
+}
+        </code>
+
+    </article>
+    <article id="abc_359_c">
+        <h2>C問題</h2>
+        <p>問題文から一見最短経路問題に見えますが、これにつられてダイクストラ法などのメモ化をすると容量が爆発的に増大してしまいます。</p>
+        <p>そこで問題文をよく読むと、タイルが互い違いになっているため、斜め方向には実はコスト1で移動できます。</p>
+        <p>そのため、現在位置から周囲8マスの移動コストは次のようになっています。</p>
+        <table border>
+            <tr><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>0</td><td>X</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+        <p>または</p>
+        <table border>
+            <tr><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>1</td><td>X</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+        <p>このことから、問題文の条件を緩和して斜め移動を許可してしまいます。</p>
+        <p>斜め移動が効率的なので、初期位置とゴールを頂点に持ち、各辺が軸と並行な長方形Aを考えます。</p>
+        <p>この時、この長方形Aに収まり、辺が軸と並行な正方形を考えると、この正方形の大きさ分は縦移動のコストで斜め移動ができます。</p>
+        <p>最後に斜め移動後の軸に平行な移動のコストを計算すればいいのですが、その数式を書くところで筆者は時間切れとなってしまいました。</p>
+    </article>
+</body>
