@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="../style.css"></style>
+    <title>AtCoder Beginner Contest 359 解説</title>
+</head>
+
+<body>
+    <h1>AtCoder Beginner Contest 358 解説</h1>
+    本稿では使用言語をRustとして解説します。
+    <article id="abc_358_a">
+        <h2>A問題</h2>
+        <p>入力が"AtCoder Land"であることを確認すればよいだけです。</p>
+        <p>この手の問題は通常、proconioよりもstd::io::stdinの方が扱いやすいですが敢えてproconio解答を載せます。</p>
+        <code>
+use proconio::input;
+
+fn main() {
+    input! {
+        AtCoder:String,
+        Land:String,
+    }
+    let exact = ("AtCoder".to_string(),"Land".to_string());
+    if AtCoder == exact.0 && Land == exact.1 {
+        println!("Yes");
+    }
+    else  {
+        println!("No");
+    }
+}
+        </code>
+        <p>変数命名が雑でごめんなさい。</p>
+    </article>
+    <article id="abc_358_b">
+        <h2>B問題</h2>
+        <p>これは単純に時系列での物事の進行をそのままプログラム上で再現すればよいです。</p>
+        <p>ある人がチケットの購入を始められる時刻は、直前の人のチケット購入終了時刻、またはチケット売り場への到着時刻のどちらか遅い方です。</p>
+        <p>そのため、i32::max()を使って遅い方の時刻を選ばせるだけでその人の購入開始時刻を得られます。</p>
+        <p>なお筆者本番提出時はなぜかmaxを忘れてifで全部書いてしまいました...</p>
+        <code>
+use proconio::input;
+
+fn main() {
+    input! {
+        n:i32,
+        a:i32,
+        t:[i32;n],
+    };
+            
+    let mut next_proc_start = 0;
+            
+    for person_arriv in t{
+        next_proc_start = if next_proc_start &lt; person_arriv{
+            person_arriv + a
+        }else{
+            next_proc_start + a
+        };
+        println!("{}",next_proc_start);
+    }
+}         
+        </code>
+    </article>
+    <article id="abc_358_c">
+        <h2>C問題</h2>
+        <p>問題中の制約から、店舗数と味の数は最大10なので全探索でも時間内に間に合います。</p>
+        <p>また、店舗での在庫有無がoかxの二値なのでこれを1文字1bitとして整数値に直してしまいましょう</p>
+        <p>そして、巡回する店舗のパターンについても2値表現が可能なので整数値で表してしまいましょう</p>
+        <p>そしてお店の巡回パターンを全探索するので、これはfor文でよく使う0..nのRangeをfoldしてしまうのが早いです。</p>
+        <p>そして、立ち寄った店すべてのポップコーンのパターンにbit演算orを行い、count_ones()で味コンプ確認をします。</p>
+        <p>そして立ち寄った店舗数は立ち寄る店のパターンのcount_ones()を取ることで求められます。</p>
+        <p>fold関数で使用しているクロージャが返すべき値は立ち寄る店のパターンのcount_onesと現在の最小値をminしたものを返せばよいです。</p>
+        <code>
+use proconio::input;
+
+
+fn main() {
+    input! {
+        n:u16,
+        m:u16,
+        t:[String;n],
+    };
+    let shops:Vec<u16> = t.iter().map(|x|{
+        let array = x.clone().into_bytes();
+        let mut result = 0;
+        for idx in 0..array.len(){
+            if array[idx] == 'o' as u8 {
+                result |= 1u16&lt;&lt;(idx as u16);
+            }
+        }
+        result
+    }).collect();
+
+    let bitbfs_upper_limit = 0x3FFu16;
+
+
+    let result:u16 = (1..=bitbfs_upper_limit).fold(n,|min,pattern|{
+        let mut flavors =0u16; 
+        for current_shop in 0u16..n{
+            if ((1&lt;&lt;current_shop) & pattern)!=0{
+                flavors|=shops[current_shop as usize]; 
+            }
+        }
+        if flavors.count_ones() &gt;= m as u32 {
+            u16::min(pattern.count_ones() as u16,min)
+        }else{
+            min
+        }
+    });
+
+    println!("{}",result);
+
+}
+        </code>
+    </article>
+</body>

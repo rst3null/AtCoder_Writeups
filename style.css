@@ -4,6 +4,8 @@ code {
     width:fit-content;
     white-space: pre;
     display:block;
+    width:90%;
+    padding:16pt;
 }
 
 article {
