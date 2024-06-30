@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<head>
+    <title>AtCoder Beginner Contest 360 解説</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <h1>AtCoder Beginner Contest 360 解説</h1>
+    本稿では使用言語をRustとして解説します。
+    <article id="abc_360_a">
+        <h2>A問題</h2>
+        <p>皿が並べられていて、3つの皿の並び順が示されています。</p>
+        <p>実は左から読んでいってRが先に来たらYesと回答すればOK。Mが先に来たらNoと回答すればよい。</p>
+        <code>
+use proconio::input;
+
+fn main() {
+    input! {
+
+        s:String,
+    }
+    let s = s.chars();
+    for dish in s{
+        match dish{
+            'R' =&gt; {
+                println!("Yes");
+                return;
+            }
+            'M' =&gt; {
+                println!("No");
+                return;
+            }
+            _ =&gt; ()
+        }
+    }
+}
+        </code>
+    </article>
+    <article id="abc_360_b">
+        <h2>B問題</h2>
+        <p>なんと問題文の制約の誤りに引っかかって何故か1個テストケースが通らないWAに悩まされました。</p>
+        <p>問題文の制約がそれほど大きくないので全探索してしまいましょう</p>
+        <p>イテレーターのchunks関数を用いると文字列をw文字で切り分けることができます。</p>
+        <p>そして、cを1からwまでループで回して、検証用文字列を一つ一つ作ってtと比較します。</p>
+        <p>もし、一致する文字列があればその時点でYesです。</p>
+        <p>また、s==tのときは常に"Yes"を返しましょう。</p>
+        <code>
+use proconio::input;
+
+fn main() {
+    input! {
+        s:String,
+        t:String,
+    }
+
+    if s == t {
+        println!("Yes");
+        return;
+    }
+
+    let slen = s.len();
+    let s:Vec&lt;char&gt; = s.chars().collect();
+
+    for w in 1..slen{
+        let chunks:Vec&lt;String&gt; = s.chunks(w).map(|chunk|chunk.iter().collect()).collect();
+
+        for c in 1..=w{
+            let str:String = chunks.iter().filter_map(|x|-&gt;Option&lt;char&gt;{x.chars().nth(c)}).collect();
+            if str == t {
+                println!("Yes");
+                return;
+            }
+        }
+    }
+    println!("No");
+}
+        </code>
+    </article>
+    <article id="abc_360_c">
+        <h2>C問題</h2>
+        <p>箱の中の荷物を1つにしたいのですが、最もコストを軽くしたいです。</p>
+        <p>というわけで、箱の中の最も重い荷物を残して他の荷物を移動させることを考えます。</p>
+        <p>つまり、コストは[箱の中身全体の重さ]-[箱の中身で一番重い荷物]をすべての箱で行い、総和を取ればOKです。</p>
+        <code>
+use proconio::input;
+
+
+
+fn main() {
+    input! {
+        n:usize,
+        a:[usize;n],
+        w:[u32;n],
+    }
+    let a:Vec&lt;usize&gt; = a.iter().map(|x|x-1).collect();
+    let mut init_box_total = vec![0u32;n];
+    let mut init_box_max = vec![0u32;n];//
+    for idx in 0..n{
+        init_box_total[a[idx]] = init_box_total[a[idx]] + w[idx];
+        init_box_max[a[idx]] = u32::max(init_box_max[a[idx]],w[idx]);
+    }
+
+    let cost =  init_box_total.iter().zip(init_box_max.iter()).fold(0,|cost,x|{cost + (*x.0 - *x.1)});
+    println!("{}",cost);
+}
+        </code>
+    </article>
+</body>

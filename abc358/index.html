@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <link rel="stylesheet" href="../style.css"></style>
+    <link rel="stylesheet" href="../style.css">
     <title>AtCoder Beginner Contest 359 解説</title>
 </head>
 
@@ -20,7 +20,7 @@ fn main() {
         Land:String,
     }
     let exact = ("AtCoder".to_string(),"Land".to_string());
-    if AtCoder == exact.0 && Land == exact.1 {
+    if AtCoder == exact.0 &amp;&amp; Land == exact.1 {
         println!("Yes");
     }
     else  {
@@ -45,9 +45,9 @@ fn main() {
         a:i32,
         t:[i32;n],
     };
-            
+
     let mut next_proc_start = 0;
-            
+
     for person_arriv in t{
         next_proc_start = if next_proc_start &lt; person_arriv{
             person_arriv + a
@@ -56,7 +56,7 @@ fn main() {
         };
         println!("{}",next_proc_start);
     }
-}         
+}
         </code>
     </article>
     <article id="abc_358_c">
@@ -78,7 +78,7 @@ fn main() {
         m:u16,
         t:[String;n],
     };
-    let shops:Vec<u16> = t.iter().map(|x|{
+    let shops:Vec&gt;u16&lt; = t.iter().map(|x|{
         let array = x.clone().into_bytes();
         let mut result = 0;
         for idx in 0..array.len(){
@@ -93,10 +93,10 @@ fn main() {
 
 
     let result:u16 = (1..=bitbfs_upper_limit).fold(n,|min,pattern|{
-        let mut flavors =0u16; 
+        let mut flavors =0u16;
         for current_shop in 0u16..n{
-            if ((1&lt;&lt;current_shop) & pattern)!=0{
-                flavors|=shops[current_shop as usize]; 
+            if ((1&lt;&lt;current_shop) &amp; pattern)!=0{
+                flavors|=shops[current_shop as usize];
             }
         }
         if flavors.count_ones() &gt;= m as u32 {
