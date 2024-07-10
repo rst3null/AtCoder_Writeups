@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="../style.css">
+    <title>AtCoder Beginner Contest 359 解説</title>
+</head>
+
+<body>
+    <h1>AtCoder Beginner Contest 361 解説</h1>
+    本稿では使用言語をRustとして解説します。
+    <article id="abc_361_a">
+        <h2>A問題</h2>
+        <p>Rustには標準でVecにinsertがあります。これを呼び出すだけでACできます。</p>
+        <p>これは言語によっては不利を受けるかもしれませんね。</p>
+        <code>
+use proconio::input;
+
+fn main() {
+    input!{
+        n:usize,
+        k:usize,
+        x:i32,
+        mut a:[i32;n],
+    }
+
+    a.insert(k, x);
+
+    for x in a {
+        print!("{} ",x);
+    }
+    println!("");
+}
+        </code>
+        <p>表示をするのはforでもiterでも使いましょう</p>
+    </article>
+    <article id="abc_361_b">
+        <h2>B問題</h2>
+        <p>これはAABBというゲームによくあるアルゴリズムが出題されています。</p>
+        <p>体積があるかどうかを答えるだけなので、体積を求める必要はありません。</p>
+        <p>重なり部分があるかどうかは数直線上に区間をプロットし、重なっていれば接触しているのです。</p>
+        <p>これを3次元に拡張すればすぐに解けます。</p>
+        <p>ちなみにこの問題は区間が0から10000までと意外と短く整数なので裏技として、RustのRangeで処理してしまう事もできます。</p>
+        <code>
+
+use proconio::input;
+
+fn main() {
+
+    input!{
+        box1:(u16,u16,u16,u16,u16,u16),
+        box2:(u16,u16,u16,u16,u16,u16),
+    }
+    let mut x:Vec&lt;u16&gt; = (box1.0..box1.3).chain(box2.0..box2.3).collect();
+    let xall = x.len();
+    x.sort_unstable();
+    x.dedup();
+    if xall ==x.len() {
+        println!("No");
+        return;
+    }
+    let mut x:Vec&lt;u16&gt; = (box1.1..box1.4).chain(box2.1..box2.4).collect();
+    let xall = x.len();
+    x.sort_unstable();
+    x.dedup();
+    if xall ==x.len() {
+        println!("No");
+        return;
+    }
+
+    let mut x:Vec&lt;u16&gt; = (box1.2..box1.5).chain(box2.2..box2.5).collect();
+    let xall = x.len();
+    x.sort_unstable();
+    x.dedup();
+    if xall ==x.len() {
+        println!("No");
+        return;
+    }
+
+    println!("Yes");
+}
+
+        </code>
+
+    </article>
+    <article id="abc_361_c">
+        <h2>C問題</h2>
+        <p>与えられた配列からいくつか要素を外して最大値と最小値の差の絶対値を評価値としてこれを最小にする問題です。</p>
+        <p>実はこの問題では配列の順序は関係なさそうなので、sort_unstable()してしまいましょう。</p>
+        <p>※競技では特に支障なければRustにおいてはsortよりsort_unstableの方が計算量的に有利です。</p>
+        <p>この状態ならあとは問題で求めているのは最大値最小値の差の絶対値なので、両端を取り除くパターンを探索するだけです。</p>
+        <p>筆者はWAしてしまいましたが、探索は部分配列を取り出して評価値をそれぞれ計算すればACにたどり着けるはずです。</p>
+    </article>
+</body>
