@@ -19,7 +19,7 @@
 
 window.addEventListener("load",(event) => {
     const url = 'https://rst3null.github.io';
-    if (0 == document.URL.indexOf(url)) {
+    if (0 != document.URL.indexOf(url)) {
         document.body.innerHTML ="<h1>警告</h1><p>アドレスバー確認!</p>"
     }
 });
